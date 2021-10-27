@@ -1,9 +1,9 @@
 CC := gcc
-CFL := -fvisibility=hidden -fvisibility-inlines-hidden
+CFL := -fvisibility=hidden -fvisibility-inlines-hidden -std=c++11
 TOOLCHAIN :=
 OUT_ELF_NAME := zraw-decoder
 ARCH :=
-INCS := -Iinclude -Izraw-decoder-lib/include
+INCS := -Iinclude -Izraw-decoder-lib/include -Iquick_arg_parser
 LIBS := -lcrypto -lpthread -lstdc++
 
 BUILDDIR := build/

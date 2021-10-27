@@ -1,3 +1,6 @@
 [submodule "zraw-decoder-lib"]
 	path = zraw-decoder-lib
 	url = https://github.com/storyboardcreativity/zraw-decoder-lib.git
+[submodule "quick_arg_parser"]
+	path = quick_arg_parser
+	url = https://github.com/Dugy/quick_arg_parser.git
