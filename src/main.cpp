@@ -1,3 +1,6 @@
+#include <fstream>
+#include <vector>
+
 #include <libzraw.h>
 #include <quick_arg_parser.hpp>
 
@@ -31,7 +34,26 @@ int main(int argc, char** argv)
         std::cout << "Output file: " << args.output << std::endl;
 	}
 
+    // Open file and get size
+    std::ifstream file(args.input, std::ios::binary | std::ios::ate);
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // Read ZRAW file to buffer
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size))
+        return -1;
+
+    // Create ZRAW decoder
     auto decoder = zraw_decoder__create();
+
+    // Read frame from buffer
+    auto state = zraw_decoder__read_hisi_frame(decoder, buffer.data(), buffer.size());
+
+    // Decode frame
+    auto decompression_state = zraw_decoder__decompress_hisi_frame(decoder);
+
+    // Release ZRAW decoder
     zraw_decoder__free(decoder);
 
     return 0;
