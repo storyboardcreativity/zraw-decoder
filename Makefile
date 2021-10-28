@@ -3,8 +3,8 @@ CFL := -fvisibility=hidden -fvisibility-inlines-hidden -std=c++11
 TOOLCHAIN :=
 OUT_ELF_NAME := zraw-decoder
 ARCH :=
-INCS := -Iinclude -Izraw-decoder-lib/include -Iquick_arg_parser
-LIBS := -lcrypto -lpthread -lstdc++
+INCS := -Iinclude -Izraw-decoder-lib/include -Iquick_arg_parser -Itinydngloader
+LIBS := -lcrypto -lpthread -lstdc++ -lm
 
 BUILDDIR := build/
 
