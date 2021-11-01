@@ -77,25 +77,50 @@ int main(int argc, char** argv)
     dng_image.SetPhotometric(tinydngwriter::PHOTOMETRIC_CFA);
     dng_image.SetXResolution(300.0);
     dng_image.SetYResolution(300.0);
+    dng_image.SetOrientation(tinydngwriter::ORIENTATION_TOPLEFT);
     dng_image.SetResolutionUnit(tinydngwriter::RESUNIT_NONE);
     dng_image.SetImageDescription("[Storyboard Creativity] ZRAW -> DNG converter generated image.");
 
     dng_image.SetUniqueCameraModel("Z CAM E2");
 
-    // CM (we set standard CIE XYZ -> sRGB matrix, D65)
+    // CM1
     double matrix1[] =
     {
-        3.2404542, -1.5371385, -0.4985314,
-        -0.9692660, 1.8760108, 0.0415560,
-        0.0556434, -0.2040259, 1.0572252
+        0.9784, -0.4995, 0.003,
+        -0.3625, 1.1454, 0.2475,
+        -0.0961, 0.2097, 0.6377
     };
     dng_image.SetColorMatrix1(3, matrix1);
+    dng_image.SetCalibrationIlluminant1(17);
 
-    // AWB
-    double analog_balance[] = {1, 1, 1};
+    // CM2
+    double matrix2[] =
+    {
+        0.6770, -0.1895, -0.0744,
+        -0.5232, 1.3145, 0.2303,
+        -0.1664, 0.2691, 0.5703
+    };
+    dng_image.SetColorMatrix2(3, matrix2);
+    dng_image.SetCalibrationIlluminant2(21);
+    
+    // We set analog WB as neutral
+    double analog_balance[] = {1.0, 1.0, 1.0};
     dng_image.SetAnalogBalance(3, analog_balance);
 
+    // We set post WB according to awb(or wb) gains
+    double rgain = frame_info.awb_gain_r;
+    double ggain = frame_info.awb_gain_g;
+    double bgain = frame_info.awb_gain_b;
+    double wbalance[3] =
+    {
+        (1.0 * ggain / rgain),
+        (1.0),
+        (1.0 * ggain / bgain)
+    };
+    dng_image.SetAsShotNeutral(3, wbalance);
+
     // Black Levels
+    dng_image.SetBlackLevelRepeatDim(2, 2);
     dng_image.SetBlackLevel(4, frame_info.cfa_black_levels);
 
     dng_image.SetDNGVersion(1, 2, 0, 0);
@@ -111,9 +136,6 @@ int main(int argc, char** argv)
     // Get CFA data
     std::vector<uint16_t> image_data(frame_info.width_in_photodiodes * frame_info.height_in_photodiodes);
     auto cfa_state = zraw_decoder__get_decompressed_CFA(decoder, image_data.data(), image_data.size() * sizeof(uint16_t));
-
-    for (int i = 0; i < image_data.size(); ++i)
-        if(image_data[i] > 0x0FFF) image_data[i] = 0x0FFF;
 
     // Release ZRAW decoder
     zraw_decoder__free(decoder);
