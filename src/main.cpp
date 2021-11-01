@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     dng_image.SetSamplesPerPixel(1);
 
     // Bits Per Photodiode value
-    uint16_t bps[1] = {frame_info.bits_per_photodiode_value};
+    uint16_t bps[1] = {(uint16_t)frame_info.bits_per_photodiode_value};
     dng_image.SetBitsPerSample(1, bps);
 
     dng_image.SetPlanarConfig(tinydngwriter::PLANARCONFIG_CONTIG);
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     uint8_t cfa_pattern[4] = {0, 1, 1, 2};
     dng_image.SetCFAPattern(4, cfa_pattern);
 
-    double white_levels[1] = {((1 << frame_info.bits_per_photodiode_value) - 1)};
+    double white_levels[1] = {(double)((1 << frame_info.bits_per_photodiode_value) - 1)};
     dng_image.SetWhiteLevelRational(1, white_levels);
 
     // Get CFA data
