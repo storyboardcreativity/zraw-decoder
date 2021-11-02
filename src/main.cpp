@@ -1,11 +1,13 @@
 #include <fstream>
 #include <vector>
 
-#include <libzraw.h>
 #include <quick_arg_parser.hpp>
 
 #define TINY_DNG_WRITER_IMPLEMENTATION
 #include <examples/dngwriter/tiny_dng_writer.h>
+
+#define LIB_ZRAW_STATIC
+#include <libzraw.h>
 
 struct Args : MainArguments<Args>
 {
