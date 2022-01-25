@@ -1,5 +1,5 @@
 CC := gcc
-CFL := -fvisibility=hidden -fvisibility-inlines-hidden -std=c++11
+CFL := -D_FILE_OFFSET_BITS=64 -fvisibility=hidden -fvisibility-inlines-hidden -std=c++11
 TOOLCHAIN :=
 OUT_ELF_NAME := zraw-decoder
 ARCH :=
